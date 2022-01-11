@@ -1,0 +1,224 @@
+model notes
+
+ Model is a class that represents the logical structure and relationship of underlying data table.
+// Creating a Model
+
+php artisan make:model <model-name>
+
+class Post extends Model
+{
+// this field define table which is related to model Post 
+    protected $table = 'my_posts';
+
+ //it is assumed that each of model table by default has a primary key column named id,
+ //it can be overridden explicitly using $primaryKey property 
+ 
+  
+class Post extends Model
+{
+    protected $primaryKey= 'id';
+}
+// each of the Eloquent Model have added the two columns (created_at and updated_at) in all of your database tables,
+// If you do not want to have these columns , set the $timestamps property on your model to false 
+
+class Post extends Model
+{
+     public $timestamps = false;
+	 
+Cardinality=>
+
+Let’s also get this term out the way fast: cardinality. It just refers to “count”, 
+loosely speaking. So, 1, 2, 3 . . . can all be the cardinality of something. End of story. Let’s keep moving!
+
+Relationships
+The ways different data items are connected are known as relationships.
+
+At the same time, there are certain capabilities/tools within an RDBMS that allow us to create and enforce these relationships, such as:
+
+Primary Key
+Foreign Key
+Constraints
+
+// one to one
+CREATE TABLE users(
+    id INT NOT NULL AUTO_INCREMENT,
+    email VARCHAR(100) NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE accounts(
+    id INT NOT NULL AUTO_INCREMENT,
+    role VARCHAR(50) NOT NULL,
+    PRIMARY KEY(id),
+    FOREIGN KEY(id) REFERENCES users(id)
+);
+
+// one to many
+
+CREATE TABLE users( 
+    id INT NOT NULL AUTO_INCREMENT, 
+    email VARCHAR(100) NOT NULL, 
+    password VARCHAR(100) NOT NULL, 
+    PRIMARY KEY(id) 
+);
+
+CREATE TABLE orders( 
+    id INT NOT NULL AUTO_INCREMENT, 
+    user_id INT NOT NULL, 
+    description VARCHAR(50) NOT NULL, 
+    PRIMARY KEY(id), 
+    FOREIGN KEY(user_id) REFERENCES users(id) 
+);
+
+
+=====>login controller
+  /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('guest')->except('logout');
+    }
+
+     public function login(Request $request)
+    {   
+//           $user = $request->all();
+//         if( $user->IsAdmin() ){
+//           echo 'role';
+// }
+   
+
+        $input = $request->all();
+   
+        $this->validate($request, [
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+   
+        if(auth()->attempt(array('email' => $input['email'], 'password' => $input['password'])))
+        {
+            if (auth()->user()->role == 1) {
+                return redirect()->route('admin');
+            }else{
+                return redirect()->route('home');
+            }
+        }else{
+            return redirect()->route('login')
+                ->with('error','Email-Address And Password Are Wrong.');
+        }
+          
+    }
+
+=====>home controller
+
+    public function index()
+    {
+        return view('home');
+    }
+     /**
+     * Show the application dashboard.
+     *
+     * @return \Illuminate\Contracts\Support\Renderable
+     */
+    public function adminHome()
+    {
+        return view('admin');
+    }
+
+
+=====>route
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+Auth::routes();
+
+Route::get('/access-denied', [VerificationController::class, 'accessDenied'])->name('VerificationController.accessDenied');
+Route::get('/home', [HomeController::class, 'index'])->name('home');
+Route::get('/admin', [HomeController::class, 'adminHome'])->name('admin')->middleware('IsAdmin');
+
+
+
+
+====>form
+   <form method="post"  >
+                              @csrf
+                               <div class="form-group">
+                                  <label for="formGroupExampleInput">Name</label>
+                                  <input type="text" name="name" class="form-control" id="formGroupExampleInput" placeholder="Enter name...">
+                                </div>
+                               <div class="form-group">
+                                  <label for="formGroupExampleInput">Car Number</label>
+                                  <input type="text" name="carnum" class="form-control" id="formGroupExampleInput"  placeholder="Enter car number">
+                                </div>
+                               <div class="form-group">
+                                  <label for="formGroupExampleInput2">Enter time</label>
+                                  <input type="time" name="time" class="form-control" id="formGroupExampleInput2">
+                                </div>
+                                <br>
+                                <button type="submit" class="btn btn-primary">Park</button>
+                            </form>
+
+
+ $save = new contact;
+            $save->name = $request->input('name');
+            $save->email = $request->input('email');
+            $save->mobile = $request->input('mobile');
+            $save->city= $request->input('city');
+
+            $save->save();
+            //  return view('pages.index',['contacts' => $contacts]);
+            return redirect('/');
+
+
+====>js link
+  <script src="{{asset('/js/vendor/jquery-1.11.3.min.js')}}" defer></script>
+
+=====>update
+ public function saveUpdateData(Request $request){
+          $data=contact::find($request->id);
+
+    // Validate
+            $this->validate($request, [
+                'name'     => 'required|string',
+                'email'     => 'required|string|email|max:255',
+                'mobile'  => 'required|string|min:10|max:14',
+                'city'     => 'required|string',
+            ]);
+
+          $data->name = $request->input('name');
+          $data->email = $request->input('email');
+          $data->mobile = $request->input('mobile');
+          $data->city= $request->input('city');
+          $data->save();
+        return redirect('/');
+      }
+
+====>
+Bootstrap 5
+
+Font awesome npm i font-awesome
+
+jQuery
+
+popper.js
+
+Feather icons npm i feather-icons
+
+flatpickr npm i flatpickr
+
+moment npm i moment
+
+Install passport composer require laravel/passport
+
+$request->has('remember_me')?true:false; save cookies in browser to auto login.
+
+php artisan reference --->than use 'passport' every time.
+
+https://github.com/Propaganistas/Laravel-Phone
+
+https://github.com/yajra/laravel-datatables

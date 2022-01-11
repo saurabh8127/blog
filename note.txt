@@ -1,0 +1,182 @@
+Route::get('/dell', [DashboardController::class, 'filter1'])->name('dell');
+
+
+
+  public function filter1(Request $request){
+      $user = $request->user();
+      $products = Product::where('category_id', '=', 1)->get();
+      // $dell = Product::where('category_id', '=', 1)->get();
+      return view('Pages.index', [
+        'name' => $user->username,
+        'products' => $products,
+
+      ]);
+    }
+      <li><a class="dropdown-item" href="{{ route('apple') }}" >APPLE </a></li>
+
+====>pass the id,name in single route
+Route::get('/filter/{name}/{id}', [DashboardController::class, 'filter'])->name('filter');
+ public function filter(Request $request, $name,$id){}
+<li><a class="dropdown-item" href="{{ url('filter/' .$category->name.'/'. $category->id) }}" >{{ $category->name }}</a></li>
+ 
+
+===> <<<CODE
+                  return '<a class="btn btn-secondary btn-sm"  href="/edit/' + full.product_slug + '">Edit <i class="fas fa-chevron-right ms-2"></i></a>';
+              CODE
+
+======>
+value="{{$product['title']}}" 
+public function editProduct(Request $request, $slug){
+       // Get  the user details from the request
+       $user = $request->user();
+       $ProductCategory =ProductCategory ::all();
+       $product = Product::where('slug', '=', $slug)->first();
+
+       return view('pages.product.edit', [
+           'name' => $user->username,
+           'product' => $product,
+           'ProductCategory'=>$ProductCategory,
+       ]);
+  }
+
+
+  <option>Select Category</option>
+                                    @foreach ($categories as $category)
+                                      <option value="{{ $category->id }}" {{ $category->id == $products['category_id'] ? 'selected' : '' }}>{{ $category->name }}</option>
+                                    @endforeach
+                                </select>
+                                @else
+                                <select class="form-select"  id="category" name="category" disabled required>
+                                    <option selected>Select Category</option>
+
+
+====>delete
+public function deleteProduct($slug){
+      Product::where('slug', '=', $slug)->delete();
+      // $ProductCategory =ProductCategory ::all();
+      //  $product = Product::where('slug', '=', $slug)->first();
+       return redirect()->route('product.listing')->with('product_creation_status', 'danger');
+    }
+
+=====>
+@extends('layouts.app')
+
+@section('content')
+
+    {{-- Title --}}
+    @include('components.pageTitle', [
+        'title' => "Add New $plural",
+        'links' => [
+            [
+                'html' => '<i class="fas fa-chevron-left me-2"></i> Return Back',
+                'route' => route("$route_base.index"),
+                'class' => 'warning',
+            ],
+        ],
+    ])
+
+    {{-- Status --}}
+    @include('components.formStatus')
+
+    {{-- Content --}}
+    <form method="POST" action="{{ route("$route_base.add") }}" enctype="multipart/form-data" id="publishing-form">
+        @csrf
+        <div class="container-fluid p-0">
+        <div class="row">
+
+        {{-- Editor Content --}}
+        <div class="col-xl-10 col-lg-9 col-md-8 col-12">
+            {{-- Title --}}
+            @include('components.form.sections.title', [
+                'id' => 'name',
+                'name' => "$singular Name",
+                'size' => 'lg'
+            ])
+
+            {{-- User Details --}}
+            @include('components.form.sections.inputGroups', [
+              'section_title' => "$singular Details",
+              'input_groups' => [
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'User Email',
+                      'id'   => 'email',
+                      'type' => 'text',
+                      'hint' => 'Please enter unique email for this user.'
+                  ]
+                ],
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'User phone',
+                      'id'   => 'phone',
+                      'type' => 'text',
+                      'hint' => 'Please enter unique phone for this user.'
+                  ]
+                ]
+              ]
+            ]);
+            {{-- User Address Details --}}
+            @include('components.form.sections.inputGroups', [
+              'section_title' => "$singular Address Details",
+              'input_groups' => [
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'Address',
+                      'id'   => 'address',
+                      'type' => 'text',
+                      'hint' => 'Please enter city for this user.'
+                  ]
+                ],
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'City',
+                      'id'   => 'city',
+                      'type' => 'text',
+                      'hint' => 'Please enter city for this user.'
+                  ]
+                ],
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'State',
+                      'id'   => 'state',
+                      'type' => 'text',
+                      'hint' => 'Please enter state for this user.'
+                  ]
+                ],
+                [
+                  'type' => 'leftLabel.input',
+                  'details' => [
+                      'name' => 'Country',
+                      'id'   => 'country',
+                      'type' => 'text',
+                      'hint' => 'Please enter country for this user.'
+                  ]
+                ]
+              ]
+            ]);
+        </div>
+
+        {{-- Sidebar --}}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-12">
+            {{-- Publishing Section --}}
+            @include('components.form.special.submitFrom', [
+                'save_as_draft' => FALSE,
+                'name' => "Add $singular",
+            ])
+
+            {{-- Image Upload Section --}}
+            @include('components.form.special.imageUpload', [
+                'placeholder' => 'http://placehold.it/300x300'
+            ])
+        </div>
+
+        </div>
+        </div>
+    </form>
+
+@endsection

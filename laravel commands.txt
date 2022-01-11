@@ -1,0 +1,146 @@
+//new project larvel install: 
+
+composer create-project laravel/laravel example-app
+
+// for title as it is in env file
+ <title>{{config('app.name')}}</title>
+
+ // Bootstrap
+@import "~bootstrap/scss/bootstrap";
+
+ JS
+
+try {
+    // Bootstrap JS
+    window.bootstrap = require('bootstrap');
+
+    // jQuery JS
+    window.$ = window.jQuery = require('jquery');
+
+    // Popper JS
+    window.Popper = require('@popperjs/core').default;
+
+    // Requiring Cropper
+    window.Cropper = require('cropperjs');
+
+    // Requiring Moment JS
+    window.moment = require('moment');
+} catch (e) {}
+
+ <!-- Style -->
+        <link href="{{ asset('css/main.css') }}" rel="stylesheet">
+
+<!-- Scripts -->
+        <script src="{{ asset('js/app.js') }}" defer></script>
+
+
+// for including bootstrap in package.json
+npm install bootstrap
+
+// for including jquery in package.json
+npm install jquery
+
+// for including popper in package.json
+npm install popper
+
+>npm i @popperjs/core
+
+https://ld-wt73.template-help.com/wt_61270/index.html#undefined1
+
+//to use a controller in route web.php for routing
+
+use App\Http\Controllers\UserController;
+
+Route::get('/user', [UserController::class, 'index']);
+
+
+// this is extending our default page in layouts folder
+@extend('layouts.default')
+//his content will be yield in layout
+@section('content')
+code goes here.......
+@endsection
+
+
+====>insert the value in a database are two type
+1->create a model and insert the code
+		public fileble=['name','email','mobile','city'];
+This means data will go in all these fields.
+and move to controller and write one line of code in function
+		function insert(Request $request)
+			{
+				Contact::create($request->all());
+				return rediract('/');
+			}
+
+2-> insert the value in database using create object			
+
+		public function insert(Request $request)
+			{
+ 				$save = new contact;
+ 				$save->name  = $request->input('name');
+				$save-email= $request->input('email');
+				$save->mobile  = $request->input('mobile');
+				$save->city = $request->input('city');
+				
+   				$save->save();
+				return rediract('/');
+			}
+
+===>storeAs()
+	it takes a user-generated name when the file is saved on a server.
+
+
+
+====>
+$request->hasFile('photo'); (To check the request key is a valid file)
+
+movie.mp4 / images.jpg / .png / .gif / document.doc / sheets.xls / datasheet.csv $extension = $request->photo->extension();
+
+$name = 'my-image.'.$extension;
+
+$request->image->storeAs( '', // Folder $name, // Name 'public' // public );
+
+Use this in form where we upload image (enctype="multipart/form-data")
+
+To install bootstrap with user authentication template php artisan ui bootstrap --auth
+
+====>
+1. composer require laravel/ui 
+2.php artisan ui bootstrap --auth
+3.php artisan migrate
+4.npm run watch
+5.php artisan make:model Image -mc //to create model and controller together
+
+==>
+  <th><a href = 'delete/{{ $user->id }}'><button class="btn btn-danger">Delete</button></a></th>
+
+==>delete controller
+ public function delete($id) 
+       {
+          // contact::find($id)->delete();
+          // DB::delete('DELETE FROM contacts WHERE id ='[$id]);
+          contact::find($id)->delete();
+          return redirect('/');
+       }
+-->in table
+ <td><a href = {{url('delete/'. $user->id )}}><button class="btn btn-danger">Delete</button></a></td>
+
+-->route
+Route::get('/delete/{id}',[CRUDController::class,'delete']);
+                                      
+
+
+====>Update an Existing table with new field
+php artisan make:migration add_role_to_users_table --table=users
+
+
+
+always add  middleware class in kernal
+
+====>Sweet Alert
+composer require realrashid/sweet-alert
+
+====>git command to clone a branch
+
+git clone -b Saurabh https://github.com/MBD-Group/Aasoka-Central-v2-Aplha-Rev1
